@@ -1,0 +1,28 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const app = express_1.default();
+const winston_1 = __importDefault(require("winston"));
+//require('./startup/logging')();
+require('./startup/db')();
+// console.log('Helooo');
+// console.log(config.get('jwtPrivateKey'));
+require('./startup/config')();
+//require('./startup/validation')();
+const error_1 = __importDefault(require("./middleware/error"));
+const products_1 = __importDefault(require("./routes/products"));
+const users_1 = __importDefault(require("./routes/users"));
+const auth_1 = __importDefault(require("./routes/auth"));
+app.use(express_1.default.json());
+app.use('/api/products', products_1.default);
+app.use('/api/users', users_1.default);
+app.use('/api/auth', auth_1.default);
+app.use(error_1.default);
+// require('./startup/routes')(app);
+// app.set('view engine','pug');
+// app.set('views','./views');
+const port = process.env.port || 3000;
+app.listen(port, () => winston_1.default.info(`listening to port...${port}`));
